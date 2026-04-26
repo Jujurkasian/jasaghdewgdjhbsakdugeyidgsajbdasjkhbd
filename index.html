@@ -1233,6 +1233,14 @@
         setContent(`<div class="category-grid">${cards}</div>`);
       }
 
+      function showMovieSidebar() {
+        MOVIE_SECTIONS.forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) el.style.display = "";
+        });
+        document.getElementById("paginationBar").style.display = "";
+      }
+
       // ===== Filters =====
       function setSort(val, btn) {
         state.sort = val;
