@@ -1,0 +1,1410 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>XPLORE — Movie Discovery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0a0a0f;
+        --surface: #13131a;
+        --surface2: #1c1c28;
+        --border: rgba(255, 255, 255, 0.07);
+        --accent: #e8365d;
+        --accent2: #ff6b35;
+        --text: #f0f0f5;
+        --muted: #6b6b80;
+        --card-radius: 12px;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: "DM Sans", sans-serif;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--bg);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--surface2);
+        border-radius: 3px;
+      }
+
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(10, 10, 15, 0.85);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border);
+        padding: 0 24px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .logo {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 28px;
+        letter-spacing: 3px;
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .header-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .view-toggle {
+        display: flex;
+        background: var(--surface);
+        border-radius: 8px;
+        padding: 3px;
+      }
+      .view-btn {
+        background: none;
+        border: none;
+        color: var(--muted);
+        padding: 5px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.2s;
+      }
+      .view-btn.active {
+        background: var(--surface2);
+        color: var(--text);
+      }
+
+      .layout {
+        display: flex;
+        min-height: calc(100vh - 60px);
+      }
+
+      .sidebar {
+        width: 260px;
+        flex-shrink: 0;
+        background: var(--surface);
+        border-right: 1px solid var(--border);
+        padding: 20px 0;
+        position: sticky;
+        top: 60px;
+        height: calc(100vh - 60px);
+        overflow-y: auto;
+      }
+      .sidebar-section {
+        padding: 0 16px 20px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 20px;
+      }
+      .sidebar-section:last-child {
+        border-bottom: none;
+      }
+      .sidebar-label {
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 2px;
+        color: var(--muted);
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+      .filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .filter-chip {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 8px;
+        background: none;
+        border: none;
+        color: var(--muted);
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        cursor: pointer;
+        text-align: left;
+        width: 100%;
+        transition: all 0.15s;
+      }
+      .filter-chip:hover {
+        background: var(--surface2);
+        color: var(--text);
+      }
+      .filter-chip.active {
+        background: rgba(232, 54, 93, 0.15);
+        color: var(--accent);
+      }
+      .chip-icon {
+        font-size: 15px;
+        width: 20px;
+        text-align: center;
+      }
+      select.sidebar-select {
+        width: 100%;
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        color: var(--text);
+        padding: 8px 10px;
+        border-radius: 8px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        cursor: pointer;
+        outline: none;
+      }
+
+      .main {
+        flex: 1;
+        min-width: 0;
+        padding: 24px;
+      }
+
+      .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 14px;
+      }
+      .section-title {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 20px;
+        letter-spacing: 2px;
+        color: var(--text);
+      }
+      .scroll-arrows {
+        display: flex;
+        gap: 6px;
+      }
+      .arrow-btn {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        color: var(--text);
+        cursor: pointer;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+      }
+      .arrow-btn:hover {
+        background: var(--accent);
+        border-color: var(--accent);
+      }
+
+      .popular-scroller {
+        display: flex;
+        gap: 14px;
+        overflow-x: auto;
+        scrollbar-width: none;
+        padding-bottom: 8px;
+        scroll-behavior: smooth;
+      }
+      .popular-scroller::-webkit-scrollbar {
+        display: none;
+      }
+      .popular-item {
+        flex: 0 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        text-decoration: none;
+        width: 80px;
+        transition: transform 0.2s;
+      }
+      .popular-item:hover {
+        transform: translateY(-3px);
+      }
+      .popular-avatar-wrap {
+        width: 68px;
+        height: 68px;
+        border-radius: 50%;
+        padding: 2px;
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+      }
+      .pornstar-avatar-wrap {
+        width: 68px;
+        height: 68px;
+        border-radius: 50%;
+        padding: 2px;
+        background: linear-gradient(135deg, #6c63ff, #48cfad);
+      }
+      .popular-avatar {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--bg);
+        display: block;
+      }
+      .popular-label {
+        font-size: 10px;
+        color: var(--muted);
+        text-align: center;
+        width: 80px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .popular-views {
+        font-size: 9px;
+        color: var(--accent);
+        text-align: center;
+      }
+
+      .active-filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 16px;
+      }
+      .filter-tag {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        background: rgba(232, 54, 93, 0.15);
+        border: 1px solid rgba(232, 54, 93, 0.3);
+        color: var(--accent);
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+      }
+      .filter-tag button {
+        background: none;
+        border: none;
+        color: var(--accent);
+        cursor: pointer;
+        font-size: 14px;
+        line-height: 1;
+      }
+
+      .info-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+      }
+      .info-count {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .info-count span {
+        color: var(--text);
+        font-weight: 600;
+      }
+
+      .movie-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 16px;
+      }
+      .movie-grid.list-view {
+        grid-template-columns: 1fr;
+      }
+
+      .movie-card {
+        background: var(--surface);
+        border-radius: var(--card-radius);
+        border: 1px solid var(--border);
+        overflow: hidden;
+        transition:
+          transform 0.2s,
+          border-color 0.2s,
+          box-shadow 0.2s;
+      }
+      .movie-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(232, 54, 93, 0.3);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      }
+      .card-thumb {
+        position: relative;
+        aspect-ratio: 16/10;
+        overflow: hidden;
+      }
+      .card-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s;
+      }
+      .movie-card:hover .card-thumb img {
+        transform: scale(1.05);
+      }
+      .card-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0.8) 0%,
+          transparent 60%
+        );
+        opacity: 0;
+        transition: opacity 0.2s;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding-bottom: 12px;
+      }
+      .movie-card:hover .card-overlay {
+        opacity: 1;
+      }
+      .play-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--accent);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 500;
+      }
+      .play-btn:hover {
+        background: #c42d4f;
+      }
+      .card-badge {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: rgba(0, 0, 0, 0.7);
+        color: var(--text);
+        padding: 2px 7px;
+        border-radius: 4px;
+        font-size: 10px;
+        font-weight: 600;
+        backdrop-filter: blur(4px);
+      }
+      .card-duration {
+        position: absolute;
+        bottom: 8px;
+        left: 8px;
+        background: rgba(0, 0, 0, 0.7);
+        color: var(--text);
+        padding: 2px 7px;
+        border-radius: 4px;
+        font-size: 10px;
+        backdrop-filter: blur(4px);
+      }
+      .card-body {
+        padding: 10px 12px;
+      }
+      .card-title {
+        font-size: 13px;
+        font-weight: 500;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        margin-bottom: 6px;
+      }
+      .card-meta {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .card-cats {
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+        margin-top: 6px;
+      }
+      .cat-tag {
+        font-size: 10px;
+        padding: 2px 7px;
+        border-radius: 4px;
+        background: var(--surface2);
+        color: var(--muted);
+        cursor: pointer;
+        transition: all 0.15s;
+        border: none;
+        font-family: "DM Sans", sans-serif;
+      }
+      .cat-tag:hover {
+        background: rgba(232, 54, 93, 0.15);
+        color: var(--accent);
+      }
+
+      .movie-card.list-card {
+        display: flex;
+      }
+      .movie-card.list-card .card-thumb {
+        width: 200px;
+        flex-shrink: 0;
+        aspect-ratio: unset;
+        height: 120px;
+      }
+      .movie-card.list-card .card-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 12px 16px;
+      }
+      .movie-card.list-card .card-title {
+        -webkit-line-clamp: 1;
+        font-size: 15px;
+      }
+      .card-desc {
+        font-size: 12px;
+        color: var(--muted);
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        margin-top: 4px;
+      }
+
+      .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 32px;
+      }
+      .page-btn {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        color: var(--text);
+        padding: 8px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        transition: all 0.2s;
+      }
+      .page-btn:hover:not(:disabled) {
+        background: var(--accent);
+        border-color: var(--accent);
+      }
+      .page-btn:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
+      .page-num {
+        font-size: 13px;
+        color: var(--muted);
+        padding: 0 8px;
+      }
+
+      .skeleton {
+        background: linear-gradient(
+          90deg,
+          var(--surface) 25%,
+          var(--surface2) 50%,
+          var(--surface) 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+        border-radius: 8px;
+      }
+      @keyframes shimmer {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+
+      .pornstar-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 16px;
+      }
+      .pornstar-card {
+        background: var(--surface);
+        border-radius: var(--card-radius);
+        border: 1px solid var(--border);
+        padding: 20px 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .pornstar-card:hover {
+        border-color: rgba(108, 99, 255, 0.4);
+        transform: translateY(-3px);
+      }
+      .ps-avatar-wrap {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        padding: 2px;
+        background: linear-gradient(135deg, #6c63ff, #48cfad);
+      }
+      .ps-avatar {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--bg);
+        display: block;
+      }
+      .ps-name {
+        font-size: 13px;
+        font-weight: 500;
+        text-align: center;
+        color: var(--text);
+      }
+      .ps-slug {
+        font-size: 11px;
+        color: var(--muted);
+        text-align: center;
+      }
+
+      .category-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 10px;
+      }
+      .category-card {
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 12px 14px;
+        cursor: pointer;
+        transition: all 0.15s;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .category-card:hover {
+        border-color: var(--accent);
+        background: rgba(232, 54, 93, 0.08);
+      }
+      .category-card.active {
+        border-color: var(--accent);
+        background: rgba(232, 54, 93, 0.15);
+      }
+      .cat-name {
+        font-size: 13px;
+        font-weight: 500;
+      }
+
+      .loading-spinner {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 60px;
+      }
+      .spinner {
+        width: 32px;
+        height: 32px;
+        border: 3px solid var(--surface2);
+        border-top-color: var(--accent);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--muted);
+      }
+      .empty-state .empty-icon {
+        font-size: 48px;
+        margin-bottom: 12px;
+      }
+      .empty-state p {
+        font-size: 15px;
+      }
+
+      .sidebar-toggle {
+        display: none;
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        color: var(--text);
+        padding: 6px 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 13px;
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          display: none;
+        }
+        .sidebar.open {
+          display: block;
+          position: fixed;
+          top: 60px;
+          left: 0;
+          z-index: 99;
+          height: calc(100vh - 60px);
+        }
+        .sidebar-toggle {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+        .movie-grid {
+          grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+          gap: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="logo">XPLORE</div>
+      <div class="header-right">
+        <button class="sidebar-toggle" onclick="toggleSidebar()">
+          ☰ Filter
+        </button>
+        <div class="view-toggle">
+          <button
+            class="view-btn active"
+            id="gridViewBtn"
+            onclick="setView('grid')"
+          >
+            ⊞
+          </button>
+          <button class="view-btn" id="listViewBtn" onclick="setView('list')">
+            ☰
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-section">
+          <div class="sidebar-label">Navigasi</div>
+          <div class="filter-group">
+            <button
+              class="filter-chip active"
+              data-page="movies"
+              onclick="switchPage('movies', this)"
+            >
+              <span class="chip-icon">🎬</span> Semua Film
+            </button>
+            <button
+              class="filter-chip"
+              data-page="pornstars"
+              onclick="switchPage('pornstars', this)"
+            >
+              <span class="chip-icon">⭐</span> Pornstars
+            </button>
+            <button
+              class="filter-chip"
+              data-page="categories"
+              onclick="switchPage('categories', this)"
+            >
+              <span class="chip-icon">🏷️</span> Kategori
+            </button>
+          </div>
+        </div>
+
+        <div class="sidebar-section" id="sortSection">
+          <div class="sidebar-label">Urutkan</div>
+          <div class="filter-group" id="sortGroup">
+            <button
+              class="filter-chip active"
+              onclick="setSort('latest', this)"
+            >
+              <span class="chip-icon">🕐</span> Terbaru
+            </button>
+            <button class="filter-chip" onclick="setSort('popular', this)">
+              <span class="chip-icon">🔥</span> Terpopuler
+            </button>
+            <button class="filter-chip" onclick="setSort('views', this)">
+              <span class="chip-icon">👁</span> Paling Ditonton
+            </button>
+            <button class="filter-chip" onclick="setSort('rating', this)">
+              <span class="chip-icon">⭐</span> Rating Tertinggi
+            </button>
+          </div>
+        </div>
+
+        <div class="sidebar-section" id="qualitySection">
+          <div class="sidebar-label">Kualitas</div>
+          <div class="filter-group" id="qualityGroup">
+            <button class="filter-chip active" onclick="setQuality('', this)">
+              <span class="chip-icon">🌐</span> Semua
+            </button>
+            <button class="filter-chip" onclick="setQuality('HD', this)">
+              <span class="chip-icon">📺</span> HD
+            </button>
+            <button class="filter-chip" onclick="setQuality('SD', this)">
+              <span class="chip-icon">📱</span> SD
+            </button>
+            <button class="filter-chip" onclick="setQuality('4K', this)">
+              <span class="chip-icon">✨</span> 4K
+            </button>
+          </div>
+        </div>
+
+        <div class="sidebar-section" id="durationSection">
+          <div class="sidebar-label">Durasi</div>
+          <div class="filter-group" id="durationGroup">
+            <button class="filter-chip active" onclick="setDuration('', this)">
+              <span class="chip-icon">⏱</span> Semua
+            </button>
+            <button class="filter-chip" onclick="setDuration('short', this)">
+              <span class="chip-icon">⚡</span> Pendek
+            </button>
+            <button class="filter-chip" onclick="setDuration('medium', this)">
+              <span class="chip-icon">▶</span> Sedang
+            </button>
+            <button class="filter-chip" onclick="setDuration('long', this)">
+              <span class="chip-icon">🎞</span> Panjang
+            </button>
+          </div>
+        </div>
+
+        <div class="sidebar-section" id="categoryFilterSection">
+          <div class="sidebar-label">Kategori</div>
+          <select
+            class="sidebar-select"
+            id="sidebarCategorySelect"
+            onchange="setCategoryFromSidebar(this.value)"
+          >
+            <option value="">Semua Kategori</option>
+          </select>
+        </div>
+
+        <div class="sidebar-section" id="pornstarFilterSection">
+          <div class="sidebar-label">Filter Pornstar</div>
+          <input
+            type="text"
+            id="pornstarInput"
+            placeholder="Ketik slug pornstar..."
+            style="
+              width: 100%;
+              background: var(--surface2);
+              border: 1px solid var(--border);
+              color: var(--text);
+              padding: 8px 10px;
+              border-radius: 8px;
+              font-family: &quot;DM Sans&quot;, sans-serif;
+              font-size: 13px;
+              outline: none;
+            "
+            onkeydown="
+              if (event.key === 'Enter') setPornstarFilter(this.value);
+            "
+          />
+          <button
+            onclick="
+              setPornstarFilter(document.getElementById('pornstarInput').value)
+            "
+            style="
+              width: 100%;
+              margin-top: 6px;
+              padding: 7px;
+              background: var(--accent);
+              border: none;
+              border-radius: 8px;
+              color: white;
+              cursor: pointer;
+              font-family: &quot;DM Sans&quot;, sans-serif;
+              font-size: 13px;
+            "
+          >
+            Terapkan
+          </button>
+        </div>
+      </aside>
+
+      <main class="main">
+        <div id="popularSection">
+          <div class="section-header">
+            <div class="section-title">🔥 PALING DITONTON</div>
+            <div class="scroll-arrows">
+              <button
+                class="arrow-btn"
+                onclick="doScroll('popularScroll', -240)"
+              >
+                ‹
+              </button>
+              <button
+                class="arrow-btn"
+                onclick="doScroll('popularScroll', 240)"
+              >
+                ›
+              </button>
+            </div>
+          </div>
+          <div class="popular-scroller" id="popularScroll"></div>
+        </div>
+
+        <div id="pornstarSection" style="margin-top: 24px">
+          <div class="section-header">
+            <div class="section-title">⭐ PORNSTAR POPULER</div>
+            <div class="scroll-arrows">
+              <button
+                class="arrow-btn"
+                onclick="doScroll('pornstarScroll', -240)"
+              >
+                ‹
+              </button>
+              <button
+                class="arrow-btn"
+                onclick="doScroll('pornstarScroll', 240)"
+              >
+                ›
+              </button>
+            </div>
+          </div>
+          <div class="popular-scroller" id="pornstarScroll"></div>
+        </div>
+
+        <div
+          style="border-top: 1px solid var(--border); margin: 24px 0 20px"
+        ></div>
+
+        <div class="active-filters" id="activeFilters"></div>
+
+        <div class="info-bar">
+          <div class="info-count">
+            Menampilkan <span id="totalCount">0</span> film — Hal.
+            <span id="curPage">1</span>/<span id="totPage">1</span>
+          </div>
+        </div>
+
+        <div id="contentArea"></div>
+
+        <div class="pagination" id="paginationBar">
+          <button class="page-btn" id="prevBtn" onclick="goPage(-1)">
+            ← Prev
+          </button>
+          <span class="page-num" id="pageLabel">1 / 1</span>
+          <button class="page-btn" id="nextBtn" onclick="goPage(1)">
+            Next →
+          </button>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      const PROXY = "https://coba-railway-production.up.railway.app/api";
+
+      const state = {
+        page: "movies",
+        currentPage: 1,
+        totalPages: 1,
+        totalItems: 0,
+        sort: "latest",
+        quality: "",
+        duration: "",
+        category: "",
+        pornstar: "",
+        view: "grid",
+        isLoading: false,
+      };
+
+      // ===== API =====
+      async function api(endpoint, params = {}) {
+        const url = new URL(`${PROXY}/${endpoint}`);
+        Object.entries(params).forEach(([k, v]) => {
+          if (v !== "" && v !== null && v !== undefined)
+            url.searchParams.append(k, v);
+        });
+        const res = await fetch(url);
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.message || `HTTP ${res.status}`);
+        return json;
+      }
+
+      function extract(json) {
+        const d = json?.data;
+        return {
+          data: d?.data || [],
+          total: d?.total || 0,
+          page: d?.page || 1,
+          totalPages: d?.totalPages || 1,
+        };
+      }
+
+      // ===== Helpers =====
+      function esc(str) {
+        return String(str || "").replace(
+          /[&<>]/g,
+          (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[m],
+        );
+      }
+      function fmtNum(n) {
+        if (!n) return "0";
+        if (n >= 1000000) return (n / 1000000).toFixed(1) + "M";
+        if (n >= 1000) return (n / 1000).toFixed(1) + "K";
+        return n.toLocaleString();
+      }
+      function doScroll(id, amount) {
+        document
+          .getElementById(id)
+          .scrollBy({ left: amount, behavior: "smooth" });
+      }
+      function toggleSidebar() {
+        document.getElementById("sidebar").classList.toggle("open");
+      }
+      function setContent(html) {
+        document.getElementById("contentArea").innerHTML = html;
+      }
+      function showLoading() {
+        setContent(
+          '<div class="loading-spinner"><div class="spinner"></div></div>',
+        );
+      }
+      function showEmpty() {
+        setContent(
+          '<div class="empty-state"><div class="empty-icon">🎬</div><p>Tidak ada film ditemukan</p></div>',
+        );
+      }
+      function showError(msg) {
+        setContent(
+          `<div class="empty-state"><div class="empty-icon">⚠️</div><p>${esc(msg)}</p></div>`,
+        );
+      }
+
+      // ===== Scrollers =====
+      async function loadPopularMovies() {
+        try {
+          const json = await api("movies", { sort: "views", limit: 20 });
+          const { data } = extract(json);
+          document.getElementById("popularScroll").innerHTML = data
+            .map(
+              (m) => `
+      <a href="player.html?slug=${m.slug}" class="popular-item">
+        <div class="popular-avatar-wrap">
+          <img class="popular-avatar" src="${m.thumbnail_url || m.poster_url || ""}" onerror="this.src='https://picsum.photos/68/68'" alt="">
+        </div>
+        <span class="popular-label">${esc(m.title)}</span>
+        <span class="popular-views">👁 ${fmtNum(m.views)}</span>
+      </a>
+    `,
+            )
+            .join("");
+        } catch (e) {
+          console.warn("popular movies:", e);
+        }
+      }
+
+      async function loadPopularPornstars() {
+        try {
+          const json = await api("pornstars", { sort: "popular", limit: 20 });
+          const { data } = extract(json);
+          document.getElementById("pornstarScroll").innerHTML = data
+            .map(
+              (p) => `
+      <a class="popular-item" onclick="filterByPornstar('${p.slug}')" style="cursor:pointer;text-decoration:none;">
+        <div class="pornstar-avatar-wrap">
+          <img class="popular-avatar" src="${p.avatar || ""}" onerror="this.src='https://picsum.photos/68/68'" alt="">
+        </div>
+        <span class="popular-label">${esc(p.name)}</span>
+      </a>
+    `,
+            )
+            .join("");
+        } catch (e) {
+          console.warn("popular pornstars:", e);
+        }
+      }
+
+      async function loadCategoryDropdown() {
+        try {
+          const json = await api("categories", { limit: 100 });
+          const { data } = extract(json);
+          document.getElementById("sidebarCategorySelect").innerHTML =
+            '<option value="">Semua Kategori</option>' +
+            data
+              .map((c) => `<option value="${c.slug}">${esc(c.name)}</option>`)
+              .join("");
+        } catch (e) {}
+      }
+
+      // ===== Page Switch =====
+      const MOVIE_SECTIONS = [
+        "sortSection",
+        "qualitySection",
+        "durationSection",
+        "categoryFilterSection",
+        "pornstarFilterSection",
+        "popularSection",
+        "pornstarSection",
+      ];
+
+      function switchPage(page, btn) {
+        state.page = page;
+        state.currentPage = 1;
+        document
+          .querySelectorAll("[data-page]")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        const isMov = page === "movies";
+        MOVIE_SECTIONS.forEach(
+          (id) =>
+            (document.getElementById(id).style.display = isMov ? "" : "none"),
+        );
+        document.getElementById("paginationBar").style.display =
+          page === "categories" ? "none" : "";
+        loadContent();
+      }
+
+      function showMovieSidebar() {
+        MOVIE_SECTIONS.forEach(
+          (id) => (document.getElementById(id).style.display = ""),
+        );
+        document.getElementById("paginationBar").style.display = "";
+      }
+
+      // ===== Load Content =====
+      async function loadContent() {
+        if (state.isLoading) return;
+        state.isLoading = true;
+        showLoading();
+        try {
+          if (state.page === "movies") await loadMovies();
+          else if (state.page === "pornstars") await loadPornstars();
+          else if (state.page === "categories") await loadCategories();
+        } catch (e) {
+          showError(e.message);
+        } finally {
+          state.isLoading = false;
+        }
+      }
+
+      // ===== Movies =====
+      async function loadMovies() {
+        let endpoint = "movies";
+        const params = { page: state.currentPage, limit: 20, sort: state.sort };
+        if (state.quality) params.quality = state.quality;
+        if (state.duration) params.duration = state.duration;
+        if (state.category) {
+          endpoint = `categories/${state.category}/movies`;
+          delete params.sort;
+        }
+        if (state.pornstar) {
+          endpoint = `pornstars/${state.pornstar}/movies`;
+          delete params.sort;
+        }
+
+        const json = await api(endpoint, params);
+        const { data, total, page, totalPages } = extract(json);
+        state.currentPage = page;
+        state.totalPages = totalPages;
+        state.totalItems = total;
+        updateInfoBar();
+        renderActiveFilters();
+
+        if (!data.length) {
+          showEmpty();
+          return;
+        }
+
+        const isList = state.view === "list";
+        const cards = data
+          .map((m) => {
+            const cats = (m.categories || [])
+              .slice(0, 2)
+              .map(
+                (c) =>
+                  `<button class="cat-tag" onclick="filterByCategory('${c.slug}')">${esc(c.name)}</button>`,
+              )
+              .join("");
+
+            if (isList) {
+              return `
+        <div class="movie-card list-card">
+          <div class="card-thumb">
+            <img src="${m.thumbnail_url || m.poster_url || ""}" onerror="this.src='https://picsum.photos/200/120'" loading="lazy">
+            <span class="card-badge">${m.quality || ""}</span>
+          </div>
+          <div class="card-body">
+            <div>
+              <div class="card-title">${esc(m.title)}</div>
+              <div class="card-desc">${esc(m.description || "")}</div>
+            </div>
+            <div>
+              <div class="card-meta">
+                <span>👁 ${fmtNum(m.views)}</span>
+                <span>⏱ ${m.duration || "-"}</span>
+              </div>
+              <div class="card-cats" style="margin-top:6px">
+                ${cats}
+                <a href="player.html?slug=${m.slug}" style="margin-left:auto;background:var(--accent);color:white;padding:4px 14px;border-radius:6px;font-size:12px;text-decoration:none;">▶ Tonton</a>
+              </div>
+            </div>
+          </div>
+        </div>`;
+            }
+
+            return `
+      <div class="movie-card">
+        <div class="card-thumb">
+          <img src="${m.thumbnail_url || m.poster_url || ""}" onerror="this.src='https://picsum.photos/200/125'" loading="lazy">
+          <span class="card-badge">${m.quality || ""}</span>
+          <span class="card-duration">${m.duration || ""}</span>
+          <div class="card-overlay">
+            <a href="player.html?slug=${m.slug}" class="play-btn">▶ Tonton</a>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-title">${esc(m.title)}</div>
+          <div class="card-meta"><span>👁 ${fmtNum(m.views)}</span></div>
+          <div class="card-cats">${cats}</div>
+        </div>
+      </div>`;
+          })
+          .join("");
+
+        setContent(
+          `<div class="movie-grid${isList ? " list-view" : ""}">${cards}</div>`,
+        );
+        updatePagination();
+      }
+
+      // ===== Pornstars =====
+      async function loadPornstars() {
+        const json = await api("pornstars", {
+          page: state.currentPage,
+          limit: 30,
+          sort: "popular",
+        });
+        const { data, total, page, totalPages } = extract(json);
+        state.currentPage = page;
+        state.totalPages = totalPages;
+        state.totalItems = total;
+        updateInfoBar();
+        const cards = data
+          .map(
+            (p) => `
+    <div class="pornstar-card" onclick="filterByPornstar('${p.slug}')">
+      <div class="ps-avatar-wrap">
+        <img class="ps-avatar" src="${p.avatar || ""}" onerror="this.src='https://picsum.photos/80/80'" loading="lazy">
+      </div>
+      <div class="ps-name">${esc(p.name)}</div>
+      <div class="ps-slug">${p.slug}</div>
+    </div>
+  `,
+          )
+          .join("");
+        setContent(`<div class="pornstar-grid">${cards}</div>`);
+        updatePagination();
+      }
+
+      // ===== Categories =====
+      async function loadCategories() {
+        const json = await api("categories", { limit: 200 });
+        const { data } = extract(json);
+        state.totalItems = data.length;
+        updateInfoBar();
+        const cards = data
+          .map(
+            (c) => `
+    <div class="category-card ${state.category === c.slug ? "active" : ""}" onclick="filterByCategory('${c.slug}')">
+      <span class="cat-name">${esc(c.name)}</span>
+    </div>
+  `,
+          )
+          .join("");
+        setContent(`<div class="category-grid">${cards}</div>`);
+      }
+
+      // ===== Filters =====
+      function setSort(val, btn) {
+        state.sort = val;
+        state.currentPage = 1;
+        document
+          .querySelectorAll("#sortGroup .filter-chip")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        loadContent();
+      }
+      function setQuality(val, btn) {
+        state.quality = val;
+        state.currentPage = 1;
+        document
+          .querySelectorAll("#qualityGroup .filter-chip")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        loadContent();
+      }
+      function setDuration(val, btn) {
+        state.duration = val;
+        state.currentPage = 1;
+        document
+          .querySelectorAll("#durationGroup .filter-chip")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        loadContent();
+      }
+      function setCategoryFromSidebar(val) {
+        state.category = val;
+        state.pornstar = "";
+        state.currentPage = 1;
+        state.page = "movies";
+        document
+          .querySelectorAll("[data-page]")
+          .forEach((b) => b.classList.remove("active"));
+        document.querySelector('[data-page="movies"]').classList.add("active");
+        loadContent();
+      }
+      function setPornstarFilter(val) {
+        state.pornstar = val.trim();
+        state.category = "";
+        state.currentPage = 1;
+        state.page = "movies";
+        document
+          .querySelectorAll("[data-page]")
+          .forEach((b) => b.classList.remove("active"));
+        document.querySelector('[data-page="movies"]').classList.add("active");
+        showMovieSidebar();
+        loadContent();
+      }
+      function filterByCategory(slug) {
+        state.category = slug;
+        state.pornstar = "";
+        state.currentPage = 1;
+        state.page = "movies";
+        document
+          .querySelectorAll("[data-page]")
+          .forEach((b) => b.classList.remove("active"));
+        document.querySelector('[data-page="movies"]').classList.add("active");
+        document.getElementById("sidebarCategorySelect").value = slug;
+        showMovieSidebar();
+        loadContent();
+      }
+      function filterByPornstar(slug) {
+        state.pornstar = slug;
+        state.category = "";
+        state.currentPage = 1;
+        state.page = "movies";
+        document.getElementById("pornstarInput").value = slug;
+        document
+          .querySelectorAll("[data-page]")
+          .forEach((b) => b.classList.remove("active"));
+        document.querySelector('[data-page="movies"]').classList.add("active");
+        showMovieSidebar();
+        loadContent();
+      }
+
+      function renderActiveFilters() {
+        const tags = [];
+        if (state.category)
+          tags.push({
+            label: `Kategori: ${state.category}`,
+            clear: () => {
+              state.category = "";
+              document.getElementById("sidebarCategorySelect").value = "";
+              loadContent();
+            },
+          });
+        if (state.pornstar)
+          tags.push({
+            label: `Pornstar: ${state.pornstar}`,
+            clear: () => {
+              state.pornstar = "";
+              document.getElementById("pornstarInput").value = "";
+              loadContent();
+            },
+          });
+        if (state.quality)
+          tags.push({
+            label: `Kualitas: ${state.quality}`,
+            clear: () => {
+              state.quality = "";
+              document.querySelector("#qualityGroup .filter-chip").click();
+            },
+          });
+        if (state.duration)
+          tags.push({
+            label: `Durasi: ${state.duration}`,
+            clear: () => {
+              state.duration = "";
+              document.querySelector("#durationGroup .filter-chip").click();
+            },
+          });
+        const el = document.getElementById("activeFilters");
+        el.innerHTML = tags
+          .map(
+            (t, i) =>
+              `<span class="filter-tag">${esc(t.label)} <button onclick="clearFilter(${i})">×</button></span>`,
+          )
+          .join("");
+        el._tags = tags;
+      }
+      function clearFilter(i) {
+        const tags = document.getElementById("activeFilters")._tags;
+        if (tags && tags[i]) tags[i].clear();
+      }
+
+      // ===== View =====
+      function setView(v) {
+        state.view = v;
+        document
+          .getElementById("gridViewBtn")
+          .classList.toggle("active", v === "grid");
+        document
+          .getElementById("listViewBtn")
+          .classList.toggle("active", v === "list");
+        if (state.page === "movies") loadContent();
+      }
+
+      // ===== Pagination =====
+      function goPage(dir) {
+        const next = state.currentPage + dir;
+        if (next < 1 || next > state.totalPages) return;
+        state.currentPage = next;
+        loadContent();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      function updatePagination() {
+        document.getElementById("prevBtn").disabled = state.currentPage <= 1;
+        document.getElementById("nextBtn").disabled =
+          state.currentPage >= state.totalPages;
+        document.getElementById("pageLabel").innerText =
+          `${state.currentPage} / ${state.totalPages}`;
+      }
+      function updateInfoBar() {
+        document.getElementById("totalCount").innerText = fmtNum(
+          state.totalItems,
+        );
+        document.getElementById("curPage").innerText = state.currentPage;
+        document.getElementById("totPage").innerText = state.totalPages;
+      }
+
+      // ===== Init =====
+      (async function init() {
+        await Promise.all([
+          loadPopularMovies(),
+          loadPopularPornstars(),
+          loadCategoryDropdown(),
+          loadContent(),
+        ]);
+      })();
+    </script>
+  </body>
+</html>
