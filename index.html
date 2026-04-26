@@ -33,17 +33,9 @@
         min-height: 100vh;
         overflow-x: hidden;
       }
-      ::-webkit-scrollbar {
-        width: 6px;
-        height: 6px;
-      }
-      ::-webkit-scrollbar-track {
-        background: var(--bg);
-      }
-      ::-webkit-scrollbar-thumb {
-        background: var(--surface2);
-        border-radius: 3px;
-      }
+      ::-webkit-scrollbar { width: 6px; height: 6px; }
+      ::-webkit-scrollbar-track { background: var(--bg); }
+      ::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 3px; }
 
       header {
         position: sticky;
@@ -71,6 +63,30 @@
         align-items: center;
         gap: 12px;
       }
+
+      /* Tombol Hentai di header */
+      .hentai-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(108, 99, 255, 0.12);
+        border: 1px solid rgba(108, 99, 255, 0.3);
+        color: #a09aff;
+        padding: 6px 14px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s;
+      }
+      .hentai-btn:hover {
+        background: rgba(108, 99, 255, 0.22);
+        border-color: rgba(108, 99, 255, 0.5);
+        color: #c4c0ff;
+      }
+
       .view-toggle {
         display: flex;
         background: var(--surface);
@@ -113,9 +129,7 @@
         border-bottom: 1px solid var(--border);
         margin-bottom: 20px;
       }
-      .sidebar-section:last-child {
-        border-bottom: none;
-      }
+      .sidebar-section:last-child { border-bottom: none; }
       .sidebar-label {
         font-size: 10px;
         font-weight: 600;
@@ -144,6 +158,7 @@
         text-align: left;
         width: 100%;
         transition: all 0.15s;
+        text-decoration: none;
       }
       .filter-chip:hover {
         background: var(--surface2);
@@ -152,6 +167,11 @@
       .filter-chip.active {
         background: rgba(232, 54, 93, 0.15);
         color: var(--accent);
+      }
+      /* Hentai chip warna beda */
+      .filter-chip.hentai-chip:hover {
+        background: rgba(108, 99, 255, 0.12);
+        color: #a09aff;
       }
       .chip-icon {
         font-size: 15px;
@@ -189,10 +209,7 @@
         letter-spacing: 2px;
         color: var(--text);
       }
-      .scroll-arrows {
-        display: flex;
-        gap: 6px;
-      }
+      .scroll-arrows { display: flex; gap: 6px; }
       .arrow-btn {
         width: 30px;
         height: 30px;
@@ -207,10 +224,7 @@
         justify-content: center;
         transition: all 0.2s;
       }
-      .arrow-btn:hover {
-        background: var(--accent);
-        border-color: var(--accent);
-      }
+      .arrow-btn:hover { background: var(--accent); border-color: var(--accent); }
 
       .popular-scroller {
         display: flex;
@@ -220,9 +234,7 @@
         padding-bottom: 8px;
         scroll-behavior: smooth;
       }
-      .popular-scroller::-webkit-scrollbar {
-        display: none;
-      }
+      .popular-scroller::-webkit-scrollbar { display: none; }
       .popular-item {
         flex: 0 0 auto;
         display: flex;
@@ -234,9 +246,7 @@
         width: 80px;
         transition: transform 0.2s;
       }
-      .popular-item:hover {
-        transform: translateY(-3px);
-      }
+      .popular-item:hover { transform: translateY(-3px); }
       .popular-avatar-wrap {
         width: 68px;
         height: 68px;
@@ -268,18 +278,9 @@
         text-overflow: ellipsis;
         white-space: nowrap;
       }
-      .popular-views {
-        font-size: 9px;
-        color: var(--accent);
-        text-align: center;
-      }
+      .popular-views { font-size: 9px; color: var(--accent); text-align: center; }
 
-      .active-filters {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-        margin-bottom: 16px;
-      }
+      .active-filters { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
       .filter-tag {
         display: flex;
         align-items: center;
@@ -306,33 +307,22 @@
         justify-content: space-between;
         margin-bottom: 16px;
       }
-      .info-count {
-        font-size: 13px;
-        color: var(--muted);
-      }
-      .info-count span {
-        color: var(--text);
-        font-weight: 600;
-      }
+      .info-count { font-size: 13px; color: var(--muted); }
+      .info-count span { color: var(--text); font-weight: 600; }
 
       .movie-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
         gap: 16px;
       }
-      .movie-grid.list-view {
-        grid-template-columns: 1fr;
-      }
+      .movie-grid.list-view { grid-template-columns: 1fr; }
 
       .movie-card {
         background: var(--surface);
         border-radius: var(--card-radius);
         border: 1px solid var(--border);
         overflow: hidden;
-        transition:
-          transform 0.2s,
-          border-color 0.2s,
-          box-shadow 0.2s;
+        transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
       }
       .movie-card:hover {
         transform: translateY(-4px);
@@ -350,17 +340,11 @@
         object-fit: cover;
         transition: transform 0.3s;
       }
-      .movie-card:hover .card-thumb img {
-        transform: scale(1.05);
-      }
+      .movie-card:hover .card-thumb img { transform: scale(1.05); }
       .card-overlay {
         position: absolute;
         inset: 0;
-        background: linear-gradient(
-          to top,
-          rgba(0, 0, 0, 0.8) 0%,
-          transparent 60%
-        );
+        background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%);
         opacity: 0;
         transition: opacity 0.2s;
         display: flex;
@@ -368,9 +352,7 @@
         justify-content: center;
         padding-bottom: 12px;
       }
-      .movie-card:hover .card-overlay {
-        opacity: 1;
-      }
+      .movie-card:hover .card-overlay { opacity: 1; }
       .play-btn {
         display: flex;
         align-items: center;
@@ -383,14 +365,11 @@
         font-size: 13px;
         font-weight: 500;
       }
-      .play-btn:hover {
-        background: #c42d4f;
-      }
       .card-badge {
         position: absolute;
         top: 8px;
         right: 8px;
-        background: rgba(0, 0, 0, 0.7);
+        background: rgba(0,0,0,0.7);
         color: var(--text);
         padding: 2px 7px;
         border-radius: 4px;
@@ -402,16 +381,14 @@
         position: absolute;
         bottom: 8px;
         left: 8px;
-        background: rgba(0, 0, 0, 0.7);
+        background: rgba(0,0,0,0.7);
         color: var(--text);
         padding: 2px 7px;
         border-radius: 4px;
         font-size: 10px;
         backdrop-filter: blur(4px);
       }
-      .card-body {
-        padding: 10px 12px;
-      }
+      .card-body { padding: 10px 12px; }
       .card-title {
         font-size: 13px;
         font-weight: 500;
@@ -428,12 +405,7 @@
         font-size: 11px;
         color: var(--muted);
       }
-      .card-cats {
-        display: flex;
-        gap: 4px;
-        flex-wrap: wrap;
-        margin-top: 6px;
-      }
+      .card-cats { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
       .cat-tag {
         font-size: 10px;
         padding: 2px 7px;
@@ -445,14 +417,9 @@
         border: none;
         font-family: "DM Sans", sans-serif;
       }
-      .cat-tag:hover {
-        background: rgba(232, 54, 93, 0.15);
-        color: var(--accent);
-      }
+      .cat-tag:hover { background: rgba(232,54,93,0.15); color: var(--accent); }
 
-      .movie-card.list-card {
-        display: flex;
-      }
+      .movie-card.list-card { display: flex; }
       .movie-card.list-card .card-thumb {
         width: 200px;
         flex-shrink: 0;
@@ -466,10 +433,7 @@
         justify-content: space-between;
         padding: 12px 16px;
       }
-      .movie-card.list-card .card-title {
-        -webkit-line-clamp: 1;
-        font-size: 15px;
-      }
+      .movie-card.list-card .card-title { -webkit-line-clamp: 1; font-size: 15px; }
       .card-desc {
         font-size: 12px;
         color: var(--muted);
@@ -498,39 +462,9 @@
         font-size: 13px;
         transition: all 0.2s;
       }
-      .page-btn:hover:not(:disabled) {
-        background: var(--accent);
-        border-color: var(--accent);
-      }
-      .page-btn:disabled {
-        opacity: 0.3;
-        cursor: not-allowed;
-      }
-      .page-num {
-        font-size: 13px;
-        color: var(--muted);
-        padding: 0 8px;
-      }
-
-      .skeleton {
-        background: linear-gradient(
-          90deg,
-          var(--surface) 25%,
-          var(--surface2) 50%,
-          var(--surface) 75%
-        );
-        background-size: 200% 100%;
-        animation: shimmer 1.5s infinite;
-        border-radius: 8px;
-      }
-      @keyframes shimmer {
-        0% {
-          background-position: 200% 0;
-        }
-        100% {
-          background-position: -200% 0;
-        }
-      }
+      .page-btn:hover:not(:disabled) { background: var(--accent); border-color: var(--accent); }
+      .page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+      .page-num { font-size: 13px; color: var(--muted); padding: 0 8px; }
 
       .pornstar-grid {
         display: grid;
@@ -549,10 +483,7 @@
         cursor: pointer;
         transition: all 0.2s;
       }
-      .pornstar-card:hover {
-        border-color: rgba(108, 99, 255, 0.4);
-        transform: translateY(-3px);
-      }
+      .pornstar-card:hover { border-color: rgba(108,99,255,0.4); transform: translateY(-3px); }
       .ps-avatar-wrap {
         width: 80px;
         height: 80px;
@@ -560,25 +491,9 @@
         padding: 2px;
         background: linear-gradient(135deg, #6c63ff, #48cfad);
       }
-      .ps-avatar {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 2px solid var(--bg);
-        display: block;
-      }
-      .ps-name {
-        font-size: 13px;
-        font-weight: 500;
-        text-align: center;
-        color: var(--text);
-      }
-      .ps-slug {
-        font-size: 11px;
-        color: var(--muted);
-        text-align: center;
-      }
+      .ps-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid var(--bg); display: block; }
+      .ps-name { font-size: 13px; font-weight: 500; text-align: center; color: var(--text); }
+      .ps-slug { font-size: 11px; color: var(--muted); text-align: center; }
 
       .category-grid {
         display: grid;
@@ -596,25 +511,11 @@
         align-items: center;
         justify-content: space-between;
       }
-      .category-card:hover {
-        border-color: var(--accent);
-        background: rgba(232, 54, 93, 0.08);
-      }
-      .category-card.active {
-        border-color: var(--accent);
-        background: rgba(232, 54, 93, 0.15);
-      }
-      .cat-name {
-        font-size: 13px;
-        font-weight: 500;
-      }
+      .category-card:hover { border-color: var(--accent); background: rgba(232,54,93,0.08); }
+      .category-card.active { border-color: var(--accent); background: rgba(232,54,93,0.15); }
+      .cat-name { font-size: 13px; font-weight: 500; }
 
-      .loading-spinner {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 60px;
-      }
+      .loading-spinner { display: flex; align-items: center; justify-content: center; padding: 60px; }
       .spinner {
         width: 32px;
         height: 32px;
@@ -623,24 +524,11 @@
         border-radius: 50%;
         animation: spin 0.8s linear infinite;
       }
-      @keyframes spin {
-        to {
-          transform: rotate(360deg);
-        }
-      }
+      @keyframes spin { to { transform: rotate(360deg); } }
 
-      .empty-state {
-        text-align: center;
-        padding: 60px 20px;
-        color: var(--muted);
-      }
-      .empty-state .empty-icon {
-        font-size: 48px;
-        margin-bottom: 12px;
-      }
-      .empty-state p {
-        font-size: 15px;
-      }
+      .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
+      .empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; }
+      .empty-state p { font-size: 15px; }
 
       .sidebar-toggle {
         display: none;
@@ -654,9 +542,7 @@
       }
 
       @media (max-width: 768px) {
-        .sidebar {
-          display: none;
-        }
+        .sidebar { display: none; }
         .sidebar.open {
           display: block;
           position: fixed;
@@ -665,15 +551,9 @@
           z-index: 99;
           height: calc(100vh - 60px);
         }
-        .sidebar-toggle {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-        }
-        .movie-grid {
-          grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-          gap: 12px;
-        }
+        .sidebar-toggle { display: flex; align-items: center; gap: 6px; }
+        .movie-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+        .hentai-btn span { display: none; } /* mobile: icon only */
       }
     </style>
   </head>
@@ -681,20 +561,16 @@
     <header>
       <div class="logo">XPLORE</div>
       <div class="header-right">
+        <!-- Tombol akses Hentai -->
+        <a href="hentai.html" class="hentai-btn">
+          🎌 <span>Hentai</span>
+        </a>
         <button class="sidebar-toggle" onclick="toggleSidebar()">
           ☰ Filter
         </button>
         <div class="view-toggle">
-          <button
-            class="view-btn active"
-            id="gridViewBtn"
-            onclick="setView('grid')"
-          >
-            ⊞
-          </button>
-          <button class="view-btn" id="listViewBtn" onclick="setView('list')">
-            ☰
-          </button>
+          <button class="view-btn active" id="gridViewBtn" onclick="setView('grid')">⊞</button>
+          <button class="view-btn" id="listViewBtn" onclick="setView('list')">☰</button>
         </div>
       </div>
     </header>
@@ -704,37 +580,26 @@
         <div class="sidebar-section">
           <div class="sidebar-label">Navigasi</div>
           <div class="filter-group">
-            <button
-              class="filter-chip active"
-              data-page="movies"
-              onclick="switchPage('movies', this)"
-            >
+            <button class="filter-chip active" data-page="movies" onclick="switchPage('movies', this)">
               <span class="chip-icon">🎬</span> Semua Film
             </button>
-            <button
-              class="filter-chip"
-              data-page="pornstars"
-              onclick="switchPage('pornstars', this)"
-            >
+            <button class="filter-chip" data-page="pornstars" onclick="switchPage('pornstars', this)">
               <span class="chip-icon">⭐</span> Pornstars
             </button>
-            <button
-              class="filter-chip"
-              data-page="categories"
-              onclick="switchPage('categories', this)"
-            >
+            <button class="filter-chip" data-page="categories" onclick="switchPage('categories', this)">
               <span class="chip-icon">🏷️</span> Kategori
             </button>
+            <!-- Hentai: link ke halaman terpisah -->
+            <a href="hentai.html" class="filter-chip hentai-chip">
+              <span class="chip-icon">🎌</span> Hentai
+            </a>
           </div>
         </div>
 
         <div class="sidebar-section" id="sortSection">
           <div class="sidebar-label">Urutkan</div>
           <div class="filter-group" id="sortGroup">
-            <button
-              class="filter-chip active"
-              onclick="setSort('latest', this)"
-            >
+            <button class="filter-chip active" onclick="setSort('latest', this)">
               <span class="chip-icon">🕐</span> Terbaru
             </button>
             <button class="filter-chip" onclick="setSort('popular', this)">
@@ -787,11 +652,7 @@
 
         <div class="sidebar-section" id="categoryFilterSection">
           <div class="sidebar-label">Kategori</div>
-          <select
-            class="sidebar-select"
-            id="sidebarCategorySelect"
-            onchange="setCategoryFromSidebar(this.value)"
-          >
+          <select class="sidebar-select" id="sidebarCategorySelect" onchange="setCategoryFromSidebar(this.value)">
             <option value="">Semua Kategori</option>
           </select>
         </div>
@@ -802,37 +663,12 @@
             type="text"
             id="pornstarInput"
             placeholder="Ketik slug pornstar..."
-            style="
-              width: 100%;
-              background: var(--surface2);
-              border: 1px solid var(--border);
-              color: var(--text);
-              padding: 8px 10px;
-              border-radius: 8px;
-              font-family: &quot;DM Sans&quot;, sans-serif;
-              font-size: 13px;
-              outline: none;
-            "
-            onkeydown="
-              if (event.key === 'Enter') setPornstarFilter(this.value);
-            "
+            style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;"
+            onkeydown="if(event.key==='Enter') setPornstarFilter(this.value);"
           />
           <button
-            onclick="
-              setPornstarFilter(document.getElementById('pornstarInput').value)
-            "
-            style="
-              width: 100%;
-              margin-top: 6px;
-              padding: 7px;
-              background: var(--accent);
-              border: none;
-              border-radius: 8px;
-              color: white;
-              cursor: pointer;
-              font-family: &quot;DM Sans&quot;, sans-serif;
-              font-size: 13px;
-            "
+            onclick="setPornstarFilter(document.getElementById('pornstarInput').value)"
+            style="width:100%;margin-top:6px;padding:7px;background:var(--accent);border:none;border-radius:8px;color:white;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;"
           >
             Terapkan
           </button>
@@ -844,18 +680,8 @@
           <div class="section-header">
             <div class="section-title">🔥 PALING DITONTON</div>
             <div class="scroll-arrows">
-              <button
-                class="arrow-btn"
-                onclick="doScroll('popularScroll', -240)"
-              >
-                ‹
-              </button>
-              <button
-                class="arrow-btn"
-                onclick="doScroll('popularScroll', 240)"
-              >
-                ›
-              </button>
+              <button class="arrow-btn" onclick="doScroll('popularScroll', -240)">‹</button>
+              <button class="arrow-btn" onclick="doScroll('popularScroll', 240)">›</button>
             </div>
           </div>
           <div class="popular-scroller" id="popularScroll"></div>
@@ -865,26 +691,14 @@
           <div class="section-header">
             <div class="section-title">⭐ PORNSTAR POPULER</div>
             <div class="scroll-arrows">
-              <button
-                class="arrow-btn"
-                onclick="doScroll('pornstarScroll', -240)"
-              >
-                ‹
-              </button>
-              <button
-                class="arrow-btn"
-                onclick="doScroll('pornstarScroll', 240)"
-              >
-                ›
-              </button>
+              <button class="arrow-btn" onclick="doScroll('pornstarScroll', -240)">‹</button>
+              <button class="arrow-btn" onclick="doScroll('pornstarScroll', 240)">›</button>
             </div>
           </div>
           <div class="popular-scroller" id="pornstarScroll"></div>
         </div>
 
-        <div
-          style="border-top: 1px solid var(--border); margin: 24px 0 20px"
-        ></div>
+        <div style="border-top: 1px solid var(--border); margin: 24px 0 20px"></div>
 
         <div class="active-filters" id="activeFilters"></div>
 
@@ -898,13 +712,9 @@
         <div id="contentArea"></div>
 
         <div class="pagination" id="paginationBar">
-          <button class="page-btn" id="prevBtn" onclick="goPage(-1)">
-            ← Prev
-          </button>
+          <button class="page-btn" id="prevBtn" onclick="goPage(-1)">← Prev</button>
           <span class="page-num" id="pageLabel">1 / 1</span>
-          <button class="page-btn" id="nextBtn" onclick="goPage(1)">
-            Next →
-          </button>
+          <button class="page-btn" id="nextBtn" onclick="goPage(1)">Next →</button>
         </div>
       </main>
     </div>
@@ -926,7 +736,6 @@
         isLoading: false,
       };
 
-      // ===== API =====
       async function api(endpoint, params = {}) {
         const url = new URL(`${PROXY}/${endpoint}`);
         Object.entries(params).forEach(([k, v]) => {
@@ -949,11 +758,10 @@
         };
       }
 
-      // ===== Helpers =====
       function esc(str) {
         return String(str || "").replace(
           /[&<>]/g,
-          (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[m],
+          (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[m]
         );
       }
       function fmtNum(n) {
@@ -963,9 +771,7 @@
         return n.toLocaleString();
       }
       function doScroll(id, amount) {
-        document
-          .getElementById(id)
-          .scrollBy({ left: amount, behavior: "smooth" });
+        document.getElementById(id).scrollBy({ left: amount, behavior: "smooth" });
       }
       function toggleSidebar() {
         document.getElementById("sidebar").classList.toggle("open");
@@ -974,63 +780,44 @@
         document.getElementById("contentArea").innerHTML = html;
       }
       function showLoading() {
-        setContent(
-          '<div class="loading-spinner"><div class="spinner"></div></div>',
-        );
+        setContent('<div class="loading-spinner"><div class="spinner"></div></div>');
       }
       function showEmpty() {
-        setContent(
-          '<div class="empty-state"><div class="empty-icon">🎬</div><p>Tidak ada film ditemukan</p></div>',
-        );
+        setContent('<div class="empty-state"><div class="empty-icon">🎬</div><p>Tidak ada film ditemukan</p></div>');
       }
       function showError(msg) {
-        setContent(
-          `<div class="empty-state"><div class="empty-icon">⚠️</div><p>${esc(msg)}</p></div>`,
-        );
+        setContent(`<div class="empty-state"><div class="empty-icon">⚠️</div><p>${esc(msg)}</p></div>`);
       }
 
-      // ===== Scrollers =====
       async function loadPopularMovies() {
         try {
           const json = await api("movies", { sort: "views", limit: 20 });
           const { data } = extract(json);
-          document.getElementById("popularScroll").innerHTML = data
-            .map(
-              (m) => `
-      <a href="player.html?slug=${m.slug}" class="popular-item">
-        <div class="popular-avatar-wrap">
-          <img class="popular-avatar" src="${m.thumbnail_url || m.poster_url || ""}" onerror="this.src='https://picsum.photos/68/68'" alt="">
-        </div>
-        <span class="popular-label">${esc(m.title)}</span>
-        <span class="popular-views">👁 ${fmtNum(m.views)}</span>
-      </a>
-    `,
-            )
-            .join("");
-        } catch (e) {
-          console.warn("popular movies:", e);
-        }
+          document.getElementById("popularScroll").innerHTML = data.map((m) => `
+            <a href="player.html?slug=${m.slug}" class="popular-item">
+              <div class="popular-avatar-wrap">
+                <img class="popular-avatar" src="${m.thumbnail_url || m.poster_url || ""}" onerror="this.src='https://picsum.photos/68/68'" alt="">
+              </div>
+              <span class="popular-label">${esc(m.title)}</span>
+              <span class="popular-views">👁 ${fmtNum(m.views)}</span>
+            </a>
+          `).join("");
+        } catch (e) { console.warn("popular movies:", e); }
       }
 
       async function loadPopularPornstars() {
         try {
           const json = await api("pornstars", { sort: "popular", limit: 20 });
           const { data } = extract(json);
-          document.getElementById("pornstarScroll").innerHTML = data
-            .map(
-              (p) => `
-      <a class="popular-item" onclick="filterByPornstar('${p.slug}')" style="cursor:pointer;text-decoration:none;">
-        <div class="pornstar-avatar-wrap">
-          <img class="popular-avatar" src="${p.avatar || ""}" onerror="this.src='https://picsum.photos/68/68'" alt="">
-        </div>
-        <span class="popular-label">${esc(p.name)}</span>
-      </a>
-    `,
-            )
-            .join("");
-        } catch (e) {
-          console.warn("popular pornstars:", e);
-        }
+          document.getElementById("pornstarScroll").innerHTML = data.map((p) => `
+            <a class="popular-item" onclick="filterByPornstar('${p.slug}')" style="cursor:pointer;text-decoration:none;">
+              <div class="pornstar-avatar-wrap">
+                <img class="popular-avatar" src="${p.avatar || ""}" onerror="this.src='https://picsum.photos/68/68'" alt="">
+              </div>
+              <span class="popular-label">${esc(p.name)}</span>
+            </a>
+          `).join("");
+        } catch (e) { console.warn("popular pornstars:", e); }
       }
 
       async function loadCategoryDropdown() {
@@ -1039,48 +826,35 @@
           const { data } = extract(json);
           document.getElementById("sidebarCategorySelect").innerHTML =
             '<option value="">Semua Kategori</option>' +
-            data
-              .map((c) => `<option value="${c.slug}">${esc(c.name)}</option>`)
-              .join("");
+            data.map((c) => `<option value="${c.slug}">${esc(c.name)}</option>`).join("");
         } catch (e) {}
       }
 
-      // ===== Page Switch =====
       const MOVIE_SECTIONS = [
-        "sortSection",
-        "qualitySection",
-        "durationSection",
-        "categoryFilterSection",
-        "pornstarFilterSection",
-        "popularSection",
-        "pornstarSection",
+        "sortSection", "qualitySection", "durationSection",
+        "categoryFilterSection", "pornstarFilterSection",
+        "popularSection", "pornstarSection",
       ];
 
       function switchPage(page, btn) {
         state.page = page;
         state.currentPage = 1;
-        document
-          .querySelectorAll("[data-page]")
-          .forEach((b) => b.classList.remove("active"));
+        document.querySelectorAll("[data-page]").forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
         const isMov = page === "movies";
-        MOVIE_SECTIONS.forEach(
-          (id) =>
-            (document.getElementById(id).style.display = isMov ? "" : "none"),
-        );
-        document.getElementById("paginationBar").style.display =
-          page === "categories" ? "none" : "";
+        MOVIE_SECTIONS.forEach((id) => (document.getElementById(id).style.display = isMov ? "" : "none"));
+        document.getElementById("paginationBar").style.display = page === "categories" ? "none" : "";
         loadContent();
       }
 
       function showMovieSidebar() {
-        MOVIE_SECTIONS.forEach(
-          (id) => (document.getElementById(id).style.display = ""),
-        );
+        MOVIE_SECTIONS.forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) el.style.display = "";
+        });
         document.getElementById("paginationBar").style.display = "";
       }
 
-      // ===== Load Content =====
       async function loadContent() {
         if (state.isLoading) return;
         state.isLoading = true;
@@ -1096,20 +870,13 @@
         }
       }
 
-      // ===== Movies =====
       async function loadMovies() {
         let endpoint = "movies";
         const params = { page: state.currentPage, limit: 20, sort: state.sort };
         if (state.quality) params.quality = state.quality;
         if (state.duration) params.duration = state.duration;
-        if (state.category) {
-          endpoint = `categories/${state.category}/movies`;
-          delete params.sort;
-        }
-        if (state.pornstar) {
-          endpoint = `pornstars/${state.pornstar}/movies`;
-          delete params.sort;
-        }
+        if (state.category) { endpoint = `categories/${state.category}/movies`; delete params.sort; }
+        if (state.pornstar) { endpoint = `pornstars/${state.pornstar}/movies`; delete params.sort; }
 
         const json = await api(endpoint, params);
         const { data, total, page, totalPages } = extract(json);
@@ -1119,201 +886,138 @@
         updateInfoBar();
         renderActiveFilters();
 
-        if (!data.length) {
-          showEmpty();
-          return;
-        }
+        if (!data.length) { showEmpty(); return; }
 
         const isList = state.view === "list";
-        const cards = data
-          .map((m) => {
-            const cats = (m.categories || [])
-              .slice(0, 2)
-              .map(
-                (c) =>
-                  `<button class="cat-tag" onclick="filterByCategory('${c.slug}')">${esc(c.name)}</button>`,
-              )
-              .join("");
+        const cards = data.map((m) => {
+          const cats = (m.categories || []).slice(0, 2)
+            .map((c) => `<button class="cat-tag" onclick="filterByCategory('${c.slug}')">${esc(c.name)}</button>`)
+            .join("");
 
-            if (isList) {
-              return `
-        <div class="movie-card list-card">
-          <div class="card-thumb">
-            <img src="${m.thumbnail_url || m.poster_url || ""}" onerror="this.src='https://picsum.photos/200/120'" loading="lazy">
-            <span class="card-badge">${m.quality || ""}</span>
-          </div>
-          <div class="card-body">
-            <div>
-              <div class="card-title">${esc(m.title)}</div>
-              <div class="card-desc">${esc(m.description || "")}</div>
-            </div>
-            <div>
-              <div class="card-meta">
-                <span>👁 ${fmtNum(m.views)}</span>
-                <span>⏱ ${m.duration || "-"}</span>
-              </div>
-              <div class="card-cats" style="margin-top:6px">
-                ${cats}
-                <a href="player.html?slug=${m.slug}" style="margin-left:auto;background:var(--accent);color:white;padding:4px 14px;border-radius:6px;font-size:12px;text-decoration:none;">▶ Tonton</a>
-              </div>
-            </div>
-          </div>
-        </div>`;
-            }
-
+          if (isList) {
             return `
-      <div class="movie-card">
-        <div class="card-thumb">
-          <img src="${m.thumbnail_url || m.poster_url || ""}" onerror="this.src='https://picsum.photos/200/125'" loading="lazy">
-          <span class="card-badge">${m.quality || ""}</span>
-          <span class="card-duration">${m.duration || ""}</span>
-          <div class="card-overlay">
-            <a href="player.html?slug=${m.slug}" class="play-btn">▶ Tonton</a>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="card-title">${esc(m.title)}</div>
-          <div class="card-meta"><span>👁 ${fmtNum(m.views)}</span></div>
-          <div class="card-cats">${cats}</div>
-        </div>
-      </div>`;
-          })
-          .join("");
+              <div class="movie-card list-card">
+                <div class="card-thumb">
+                  <img src="${m.thumbnail_url || m.poster_url || ""}" onerror="this.src='https://picsum.photos/200/120'" loading="lazy">
+                  <span class="card-badge">${m.quality || ""}</span>
+                </div>
+                <div class="card-body">
+                  <div>
+                    <div class="card-title">${esc(m.title)}</div>
+                    <div class="card-desc">${esc(m.description || "")}</div>
+                  </div>
+                  <div>
+                    <div class="card-meta">
+                      <span>👁 ${fmtNum(m.views)}</span>
+                      <span>⏱ ${m.duration || "-"}</span>
+                    </div>
+                    <div class="card-cats" style="margin-top:6px">
+                      ${cats}
+                      <a href="player.html?slug=${m.slug}" style="margin-left:auto;background:var(--accent);color:white;padding:4px 14px;border-radius:6px;font-size:12px;text-decoration:none;">▶ Tonton</a>
+                    </div>
+                  </div>
+                </div>
+              </div>`;
+          }
 
-        setContent(
-          `<div class="movie-grid${isList ? " list-view" : ""}">${cards}</div>`,
-        );
+          return `
+            <div class="movie-card">
+              <div class="card-thumb">
+                <img src="${m.thumbnail_url || m.poster_url || ""}" onerror="this.src='https://picsum.photos/200/125'" loading="lazy">
+                <span class="card-badge">${m.quality || ""}</span>
+                <span class="card-duration">${m.duration || ""}</span>
+                <div class="card-overlay">
+                  <a href="player.html?slug=${m.slug}" class="play-btn">▶ Tonton</a>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="card-title">${esc(m.title)}</div>
+                <div class="card-meta"><span>👁 ${fmtNum(m.views)}</span></div>
+                <div class="card-cats">${cats}</div>
+              </div>
+            </div>`;
+        }).join("");
+
+        setContent(`<div class="movie-grid${isList ? " list-view" : ""}">${cards}</div>`);
         updatePagination();
       }
 
-      // ===== Pornstars =====
       async function loadPornstars() {
-        const json = await api("pornstars", {
-          page: state.currentPage,
-          limit: 30,
-          sort: "popular",
-        });
+        const json = await api("pornstars", { page: state.currentPage, limit: 30, sort: "popular" });
         const { data, total, page, totalPages } = extract(json);
         state.currentPage = page;
         state.totalPages = totalPages;
         state.totalItems = total;
         updateInfoBar();
-        const cards = data
-          .map(
-            (p) => `
-    <div class="pornstar-card" onclick="filterByPornstar('${p.slug}')">
-      <div class="ps-avatar-wrap">
-        <img class="ps-avatar" src="${p.avatar || ""}" onerror="this.src='https://picsum.photos/80/80'" loading="lazy">
-      </div>
-      <div class="ps-name">${esc(p.name)}</div>
-      <div class="ps-slug">${p.slug}</div>
-    </div>
-  `,
-          )
-          .join("");
+        const cards = data.map((p) => `
+          <div class="pornstar-card" onclick="filterByPornstar('${p.slug}')">
+            <div class="ps-avatar-wrap">
+              <img class="ps-avatar" src="${p.avatar || ""}" onerror="this.src='https://picsum.photos/80/80'" loading="lazy">
+            </div>
+            <div class="ps-name">${esc(p.name)}</div>
+            <div class="ps-slug">${p.slug}</div>
+          </div>
+        `).join("");
         setContent(`<div class="pornstar-grid">${cards}</div>`);
         updatePagination();
       }
 
-      // ===== Categories =====
       async function loadCategories() {
         const json = await api("categories", { limit: 200 });
         const { data } = extract(json);
         state.totalItems = data.length;
         updateInfoBar();
-        const cards = data
-          .map(
-            (c) => `
-    <div class="category-card ${state.category === c.slug ? "active" : ""}" onclick="filterByCategory('${c.slug}')">
-      <span class="cat-name">${esc(c.name)}</span>
-    </div>
-  `,
-          )
-          .join("");
+        const cards = data.map((c) => `
+          <div class="category-card ${state.category === c.slug ? "active" : ""}" onclick="filterByCategory('${c.slug}')">
+            <span class="cat-name">${esc(c.name)}</span>
+          </div>
+        `).join("");
         setContent(`<div class="category-grid">${cards}</div>`);
       }
 
-      function showMovieSidebar() {
-        MOVIE_SECTIONS.forEach((id) => {
-          const el = document.getElementById(id);
-          if (el) el.style.display = "";
-        });
-        document.getElementById("paginationBar").style.display = "";
-      }
-
-      // ===== Filters =====
       function setSort(val, btn) {
-        state.sort = val;
-        state.currentPage = 1;
-        document
-          .querySelectorAll("#sortGroup .filter-chip")
-          .forEach((b) => b.classList.remove("active"));
+        state.sort = val; state.currentPage = 1;
+        document.querySelectorAll("#sortGroup .filter-chip").forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
         loadContent();
       }
       function setQuality(val, btn) {
-        state.quality = val;
-        state.currentPage = 1;
-        document
-          .querySelectorAll("#qualityGroup .filter-chip")
-          .forEach((b) => b.classList.remove("active"));
+        state.quality = val; state.currentPage = 1;
+        document.querySelectorAll("#qualityGroup .filter-chip").forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
         loadContent();
       }
       function setDuration(val, btn) {
-        state.duration = val;
-        state.currentPage = 1;
-        document
-          .querySelectorAll("#durationGroup .filter-chip")
-          .forEach((b) => b.classList.remove("active"));
+        state.duration = val; state.currentPage = 1;
+        document.querySelectorAll("#durationGroup .filter-chip").forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
         loadContent();
       }
       function setCategoryFromSidebar(val) {
-        state.category = val;
-        state.pornstar = "";
-        state.currentPage = 1;
-        state.page = "movies";
-        document
-          .querySelectorAll("[data-page]")
-          .forEach((b) => b.classList.remove("active"));
+        state.category = val; state.pornstar = ""; state.currentPage = 1; state.page = "movies";
+        document.querySelectorAll("[data-page]").forEach((b) => b.classList.remove("active"));
         document.querySelector('[data-page="movies"]').classList.add("active");
         loadContent();
       }
       function setPornstarFilter(val) {
-        state.pornstar = val.trim();
-        state.category = "";
-        state.currentPage = 1;
-        state.page = "movies";
-        document
-          .querySelectorAll("[data-page]")
-          .forEach((b) => b.classList.remove("active"));
+        state.pornstar = val.trim(); state.category = ""; state.currentPage = 1; state.page = "movies";
+        document.querySelectorAll("[data-page]").forEach((b) => b.classList.remove("active"));
         document.querySelector('[data-page="movies"]').classList.add("active");
         showMovieSidebar();
         loadContent();
       }
       function filterByCategory(slug) {
-        state.category = slug;
-        state.pornstar = "";
-        state.currentPage = 1;
-        state.page = "movies";
-        document
-          .querySelectorAll("[data-page]")
-          .forEach((b) => b.classList.remove("active"));
+        state.category = slug; state.pornstar = ""; state.currentPage = 1; state.page = "movies";
+        document.querySelectorAll("[data-page]").forEach((b) => b.classList.remove("active"));
         document.querySelector('[data-page="movies"]').classList.add("active");
         document.getElementById("sidebarCategorySelect").value = slug;
         showMovieSidebar();
         loadContent();
       }
       function filterByPornstar(slug) {
-        state.pornstar = slug;
-        state.category = "";
-        state.currentPage = 1;
-        state.page = "movies";
+        state.pornstar = slug; state.category = ""; state.currentPage = 1; state.page = "movies";
         document.getElementById("pornstarInput").value = slug;
-        document
-          .querySelectorAll("[data-page]")
-          .forEach((b) => b.classList.remove("active"));
+        document.querySelectorAll("[data-page]").forEach((b) => b.classList.remove("active"));
         document.querySelector('[data-page="movies"]').classList.add("active");
         showMovieSidebar();
         loadContent();
@@ -1321,47 +1025,12 @@
 
       function renderActiveFilters() {
         const tags = [];
-        if (state.category)
-          tags.push({
-            label: `Kategori: ${state.category}`,
-            clear: () => {
-              state.category = "";
-              document.getElementById("sidebarCategorySelect").value = "";
-              loadContent();
-            },
-          });
-        if (state.pornstar)
-          tags.push({
-            label: `Pornstar: ${state.pornstar}`,
-            clear: () => {
-              state.pornstar = "";
-              document.getElementById("pornstarInput").value = "";
-              loadContent();
-            },
-          });
-        if (state.quality)
-          tags.push({
-            label: `Kualitas: ${state.quality}`,
-            clear: () => {
-              state.quality = "";
-              document.querySelector("#qualityGroup .filter-chip").click();
-            },
-          });
-        if (state.duration)
-          tags.push({
-            label: `Durasi: ${state.duration}`,
-            clear: () => {
-              state.duration = "";
-              document.querySelector("#durationGroup .filter-chip").click();
-            },
-          });
+        if (state.category) tags.push({ label: `Kategori: ${state.category}`, clear: () => { state.category = ""; document.getElementById("sidebarCategorySelect").value = ""; loadContent(); } });
+        if (state.pornstar) tags.push({ label: `Pornstar: ${state.pornstar}`, clear: () => { state.pornstar = ""; document.getElementById("pornstarInput").value = ""; loadContent(); } });
+        if (state.quality)  tags.push({ label: `Kualitas: ${state.quality}`,  clear: () => { state.quality = ""; document.querySelector("#qualityGroup .filter-chip").click(); } });
+        if (state.duration) tags.push({ label: `Durasi: ${state.duration}`,   clear: () => { state.duration = ""; document.querySelector("#durationGroup .filter-chip").click(); } });
         const el = document.getElementById("activeFilters");
-        el.innerHTML = tags
-          .map(
-            (t, i) =>
-              `<span class="filter-tag">${esc(t.label)} <button onclick="clearFilter(${i})">×</button></span>`,
-          )
-          .join("");
+        el.innerHTML = tags.map((t, i) => `<span class="filter-tag">${esc(t.label)} <button onclick="clearFilter(${i})">×</button></span>`).join("");
         el._tags = tags;
       }
       function clearFilter(i) {
@@ -1369,19 +1038,13 @@
         if (tags && tags[i]) tags[i].clear();
       }
 
-      // ===== View =====
       function setView(v) {
         state.view = v;
-        document
-          .getElementById("gridViewBtn")
-          .classList.toggle("active", v === "grid");
-        document
-          .getElementById("listViewBtn")
-          .classList.toggle("active", v === "list");
+        document.getElementById("gridViewBtn").classList.toggle("active", v === "grid");
+        document.getElementById("listViewBtn").classList.toggle("active", v === "list");
         if (state.page === "movies") loadContent();
       }
 
-      // ===== Pagination =====
       function goPage(dir) {
         const next = state.currentPage + dir;
         if (next < 1 || next > state.totalPages) return;
@@ -1391,20 +1054,15 @@
       }
       function updatePagination() {
         document.getElementById("prevBtn").disabled = state.currentPage <= 1;
-        document.getElementById("nextBtn").disabled =
-          state.currentPage >= state.totalPages;
-        document.getElementById("pageLabel").innerText =
-          `${state.currentPage} / ${state.totalPages}`;
+        document.getElementById("nextBtn").disabled = state.currentPage >= state.totalPages;
+        document.getElementById("pageLabel").innerText = `${state.currentPage} / ${state.totalPages}`;
       }
       function updateInfoBar() {
-        document.getElementById("totalCount").innerText = fmtNum(
-          state.totalItems,
-        );
+        document.getElementById("totalCount").innerText = fmtNum(state.totalItems);
         document.getElementById("curPage").innerText = state.currentPage;
         document.getElementById("totPage").innerText = state.totalPages;
       }
 
-      // ===== Init =====
       (async function init() {
         await Promise.all([
           loadPopularMovies(),
