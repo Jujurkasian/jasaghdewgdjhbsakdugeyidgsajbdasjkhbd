@@ -634,10 +634,10 @@
             )
             .join("");
 
-          const rawThumb = item.thumb_url || "";
+          const rawThumb = item.cover || item.thumb_url || "";
           const thumb = rawThumb
             ? `https://coba-railway-production.up.railway.app/jav/thumb?url=${encodeURIComponent(rawThumb)}`
-            : `https://picsum.photos/180/112?random=${item.code}`;
+            : "";
 
           return `
           <a href="hentai-player.html?slug=${esc(item.slug)}" class="hentai-card">
