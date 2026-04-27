@@ -70,8 +70,31 @@
       border-radius: 6px;
     }
 
-    .back-btn {
+    .header-right {
       margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .back-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
+
+    .bookmark-btn {
       display: flex;
       align-items: center;
       gap: 6px;
@@ -85,7 +108,12 @@
       font-size: 13px;
       transition: all 0.2s;
     }
-    .back-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
+    .bookmark-btn.active {
+      background: rgba(108,99,255,0.15);
+      border-color: rgba(108,99,255,0.4);
+      color: var(--accent);
+    }
+    .bookmark-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
 
     /* ===== CONTAINER ===== */
     .container {
@@ -105,7 +133,6 @@
       border: 1px solid var(--border);
     }
 
-    /* Thumbnail overlay sebelum play */
     .player-poster {
       position: absolute;
       inset: 0;
@@ -250,7 +277,7 @@
       border: 1px solid var(--border);
       color: var(--muted);
       cursor: pointer;
-      transition: all 0.15s;
+      transition: all 0.15px;
       text-decoration: none;
     }
     .genre-tag:hover {
@@ -259,11 +286,17 @@
       color: var(--accent);
     }
 
+    .action-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
     .open-btn {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      margin-top: 14px;
       padding: 7px 14px;
       background: var(--surface2);
       border: 1px solid var(--border);
@@ -296,23 +329,24 @@
   <header>
     <a href="index.html" class="logo">XPLORE</a>
     <span class="page-badge">HENTAI</span>
-    <button class="back-btn" id="backBtn">← Kembali</button>
+    <div class="header-right">
+      <button class="bookmark-btn" id="bookmarkBtn" onclick="toggleBookmark()">☆ Simpan</button>
+      <a href="history.html" class="back-btn">🕐 History</a>
+      <button class="back-btn" id="backBtn">← Kembali</button>
+    </div>
   </header>
 
   <div class="container" id="app">
-    <!-- Player: default state = loading -->
     <div class="player-wrap" id="playerWrap">
       <div class="player-placeholder" id="playerPlaceholder">
         <div class="spinner"></div>
         <span>Memuat data...</span>
       </div>
-      <!-- Poster + play overlay (muncul setelah data loaded) -->
       <img id="playerPoster" class="player-poster" src="" alt="" style="display:none" />
       <div class="play-overlay" id="playOverlay" style="display:none" onclick="startPlay()">
         <div class="play-circle">▶</div>
         <span class="play-label">Klik untuk putar</span>
       </div>
-      <!-- Iframe: hanya di-set src setelah user klik play -->
       <iframe
         id="videoFrame"
         allow="autoplay; fullscreen; picture-in-picture"
@@ -320,7 +354,6 @@
       ></iframe>
     </div>
 
-    <!-- Info -->
     <div class="info-section">
       <img class="cover-img" id="cover" src="" alt="Cover" onerror="this.style.display='none'" />
       <div class="info-body">
@@ -328,17 +361,20 @@
         <div class="movie-meta" id="meta"></div>
         <p class="movie-desc" id="description"></p>
         <div class="genres" id="genres"></div>
-        <a class="open-btn" id="openBtn" href="#" target="_blank" rel="noopener">
-          ↗ Buka di tab baru
-        </a>
+        <div class="action-row">
+          <a class="open-btn" id="openBtn" href="#" target="_blank" rel="noopener">↗ Buka di tab baru</a>
+          <a class="open-btn" href="history.html">🕐 History & Bookmark</a>
+        </div>
       </div>
     </div>
   </div>
 
+  <script src="history-utils.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const PROXY = 'https://coba-railway-production.up.railway.app';
       let embedUrl = '';
+      let currentSlug = '';
 
       // ===== Back =====
       document.getElementById('backBtn').addEventListener('click', () => {
@@ -355,6 +391,7 @@
         showError('Slug tidak ditemukan.', 'Akses via ?slug=nama-hentai');
         return;
       }
+      currentSlug = slug;
 
       loadHentai(slug);
 
@@ -378,21 +415,17 @@
         document.title = `${d.title} — XPLORE`;
         embedUrl = d.embedUrl || `https://hentaiocean.com/embed/${slug}`;
 
-        // Poster (thumbnail untuk preview)
         const poster = document.getElementById('playerPoster');
         poster.src = d.thumbnail || d.cover || '';
         poster.style.display = 'block';
 
-        // Show play overlay, hide spinner
         document.getElementById('playerPlaceholder').style.display = 'none';
         document.getElementById('playOverlay').style.display = 'flex';
 
-        // Info
         document.getElementById('title').innerText       = d.title;
         document.getElementById('description').innerText = d.description || '';
         document.getElementById('cover').src             = d.cover || d.thumbnail || '';
 
-        // Meta
         const metas = [
           d.releaseDate ? `📅 ${d.releaseDate}` : null,
           d.uploadDate  ? `⬆ Upload: ${d.uploadDate}` : null,
@@ -400,24 +433,47 @@
         document.getElementById('meta').innerHTML = metas
           .map(m => `<span class="meta-badge">${m}</span>`).join('');
 
-        // Genres
         document.getElementById('genres').innerHTML = (d.genres || [])
           .map(g => `<a class="genre-tag" href="hentai.html?genre=${encodeURIComponent(g)}">${esc(g)}</a>`)
           .join('');
 
-        // Open button
         document.getElementById('openBtn').href = embedUrl;
+
+        // ===== Save unified history =====
+        XploreHistory.save({
+          type: 'hentai',
+          id: slug,
+          title: d.title || '',
+          thumb: d.thumbnail || d.cover || '',
+        });
+        updateBookmarkBtn();
       }
 
-      // ===== Play: set iframe src hanya saat user klik =====
+      // ===== Bookmark =====
+      window.toggleBookmark = function() {
+        if (!currentSlug) return;
+        XploreHistory.toggleBookmark({
+          type: 'hentai',
+          id: currentSlug,
+          title: document.getElementById('title').innerText,
+          thumb: document.getElementById('playerPoster').src || '',
+        });
+        updateBookmarkBtn();
+      };
+
+      function updateBookmarkBtn() {
+        const isBm = XploreHistory.isBookmarked('hentai', currentSlug);
+        const btn  = document.getElementById('bookmarkBtn');
+        btn.textContent = isBm ? '★ Tersimpan' : '☆ Simpan';
+        btn.classList.toggle('active', isBm);
+      }
+
+      // ===== Play =====
       window.startPlay = function() {
         if (!embedUrl) return;
-
         const frame   = document.getElementById('videoFrame');
         const overlay = document.getElementById('playOverlay');
         const poster  = document.getElementById('playerPoster');
-
-        // Lazy load: set src sekarang baru iframe mulai load
         frame.src = embedUrl;
         frame.style.display = 'block';
         overlay.style.display = 'none';

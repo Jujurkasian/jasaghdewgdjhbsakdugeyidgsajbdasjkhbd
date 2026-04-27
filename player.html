@@ -58,6 +58,13 @@
       flex-shrink: 0;
     }
 
+    .header-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
     .back-btn {
       display: flex;
       align-items: center;
@@ -74,6 +81,27 @@
       text-decoration: none;
     }
     .back-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
+
+    .bookmark-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+    .bookmark-btn.active {
+      background: rgba(232,54,93,0.15);
+      border-color: rgba(232,54,93,0.4);
+      color: var(--accent);
+    }
+    .bookmark-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
 
     /* ===== LAYOUT ===== */
     .container {
@@ -203,11 +231,17 @@
       color: var(--accent);
     }
 
+    .action-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
     .open-embed-btn {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      margin-top: 14px;
       padding: 7px 14px;
       background: var(--surface2);
       border: 1px solid var(--border);
@@ -293,7 +327,11 @@
 
   <header>
     <a href="index.html" class="logo">XPLORE</a>
-    <button class="back-btn" id="backBtn">← Kembali</button>
+    <div class="header-right">
+      <button class="bookmark-btn" id="bookmarkBtn" onclick="toggleBookmark()">☆ Simpan</button>
+      <a href="history.html" class="back-btn">🕐 History</a>
+      <button class="back-btn" id="backBtn">← Kembali</button>
+    </div>
   </header>
 
   <div class="container" id="app">
@@ -318,9 +356,12 @@
         <div class="movie-meta" id="meta"></div>
         <p class="movie-desc" id="description"></p>
         <div class="categories" id="categories"></div>
-        <a class="open-embed-btn" id="openEmbedBtn" href="#" target="_blank" rel="noopener">
-          ↗ Buka di tab baru
-        </a>
+        <div class="action-row">
+          <a class="open-embed-btn" id="openEmbedBtn" href="#" target="_blank" rel="noopener">
+            ↗ Buka di tab baru
+          </a>
+          <a class="open-embed-btn" href="history.html">🕐 History & Bookmark</a>
+        </div>
       </div>
     </div>
 
@@ -328,9 +369,13 @@
     <div class="episodes-section" id="episodeSection"></div>
   </div>
 
+  <script src="history-utils.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const PROXY = 'https://coba-railway-production.up.railway.app/api';
+
+      let currentSlug = '';
+      let currentData = null;
 
       // ===== Back button =====
       document.getElementById('backBtn').addEventListener('click', () => {
@@ -343,11 +388,11 @@
 
       // ===== Get slug =====
       const slug = new URLSearchParams(location.search).get('slug');
-
       if (!slug) {
         showError('Slug tidak ditemukan.', 'Akses halaman ini via ?slug=nama-film');
         return;
       }
+      currentSlug = slug;
 
       loadMovie(slug);
 
@@ -358,12 +403,11 @@
           if (!res.ok) throw new Error(`HTTP ${res.status}`);
           const json = await res.json();
 
-          // Normalize response shape
           let d = json?.data ?? json;
           if (d?.data && !d?.title) d = d.data;
-
           if (!d?.title) throw new Error('Data film tidak valid (missing title)');
 
+          currentData = d;
           render(d);
         } catch (err) {
           console.error('[loadMovie]', err);
@@ -383,10 +427,10 @@
 
         // Meta badges
         const metaItems = [
-          d.duration  ? `⏱ ${d.duration}`                     : null,
-          d.quality   ? `🎬 ${d.quality}`                      : null,
-          d.views     ? `👁 ${fmtNum(d.views)} views`          : null,
-          d.year      ? `📅 ${d.year}`                         : null,
+          d.duration  ? `⏱ ${d.duration}`           : null,
+          d.quality   ? `🎬 ${d.quality}`             : null,
+          d.views     ? `👁 ${fmtNum(d.views)} views` : null,
+          d.year      ? `📅 ${d.year}`                : null,
         ].filter(Boolean);
 
         document.getElementById('meta').innerHTML = metaItems
@@ -401,6 +445,34 @@
 
         // Episodes + Sources
         renderEpisodes(d.episodes || []);
+
+        // ===== Save unified history =====
+        XploreHistory.save({
+          type: 'live',
+          id: slug,
+          title: d.title || '',
+          thumb: d.thumbnail_url || d.poster_url || '',
+        });
+        updateBookmarkBtn();
+      }
+
+      // ===== Bookmark =====
+      window.toggleBookmark = function() {
+        if (!currentSlug || !currentData) return;
+        XploreHistory.toggleBookmark({
+          type: 'live',
+          id: currentSlug,
+          title: currentData.title || '',
+          thumb: currentData.thumbnail_url || currentData.poster_url || '',
+        });
+        updateBookmarkBtn();
+      };
+
+      function updateBookmarkBtn() {
+        const isBm = XploreHistory.isBookmarked('live', currentSlug);
+        const btn  = document.getElementById('bookmarkBtn');
+        btn.textContent = isBm ? '★ Tersimpan' : '☆ Simpan';
+        btn.classList.toggle('active', isBm);
       }
 
       function renderEpisodes(episodes) {
@@ -412,9 +484,7 @@
           return;
         }
 
-        // Collect all sources untuk auto-play first
         let firstBtn = null;
-
         section.innerHTML = `<div class="section-label">📀 Sumber Video</div>`;
 
         episodes.forEach((ep, epIdx) => {
@@ -448,7 +518,6 @@
             });
 
             row.appendChild(btn);
-
             if (!firstBtn) firstBtn = btn;
           });
 
@@ -456,7 +525,6 @@
           section.appendChild(block);
         });
 
-        // Auto-play first source
         if (firstBtn) {
           firstBtn.click();
         } else {
@@ -468,16 +536,12 @@
       // ===== Play Embed =====
       function playEmbed(url) {
         if (!url) return;
-
-        const frame = document.getElementById('videoFrame');
+        const frame       = document.getElementById('videoFrame');
         const placeholder = document.getElementById('playerPlaceholder');
-
-        frame.src = url;
+        frame.src         = url;
         frame.style.display = 'block';
         placeholder.style.display = 'none';
-
-        const openBtn = document.getElementById('openEmbedBtn');
-        openBtn.href = url;
+        document.getElementById('openEmbedBtn').href = url;
       }
 
       // ===== Helpers =====
